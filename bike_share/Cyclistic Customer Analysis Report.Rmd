@@ -1,0 +1,522 @@
+---
+title: "Cyclistic Customer Analysis"
+author: "Benjamin Allen"
+date: "7/31/22"
+output: pdf_document
+header-includes:
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+library(RSQLite)
+library(ragg)
+library(sf)
+library("rnaturalearth")
+library("rnaturalearthdata")
+library("maps")
+library(sp)
+sf_use_s2(FALSE)
+theme_set(theme_bw())
+world <- ne_countries(scale='medium',returnclass = 'sf')
+Average_Trip_Duration_By_Customer_And_Bike <- read.csv("C:/Users/Norpotatos/Documents/Google Data Analytics Capstones/Capstone 1 - Bike Sharing/Average_Trip_Duration_By_Customer_And_Bike.csv")
+Bike_Type_By_Customer <- read.csv("C:/Users/Norpotatos/Documents/Google Data Analytics Capstones/Capstone 1 - Bike Sharing/Bike_Type_By_Customer.csv")
+Missing_By_Customer <- read.csv("C:/Users/Norpotatos/Documents/Google Data Analytics Capstones/Capstone 1 - Bike Sharing/Missing_By_Customer.csv")
+Start_Location_By_Customer <- read.csv("C:/Users/Norpotatos/Documents/Google Data Analytics Capstones/Capstone 1 - Bike Sharing/Start_Location_By_Customer.csv")
+Most_Popular_Start <- read.csv("C:/Users/Norpotatos/Documents/Google Data Analytics Capstones/Capstone 1 - Bike Sharing/Most_Popular_Start.csv")
+```
+
+# Introduction
+
+Cyclistic is a bike-share company based in Chicago and operates with a fleet of
+nearly 6,000 bicycles. Cyclistic has two main subsets of customers: casual and
+members. Casual riders are those use cyclistic bicycles by purchasing single-ride
+or full-day passes. Members are those who have purchased an annual membership to
+use Cyclistic's services.
+
+
+Cyclistic's financial analysts have identified members as being much more profitable
+than casual customers. Given this, it has been decided to pivot our marketing efforts
+toward the converting existing casual customers over to annual memberships.
+
+
+To aid with this pivot, this analysis is aimed at identifying actionable differences
+between casual riders and members. Actionable differences refer to those that could be
+leveraged in upcoming Cyclistic marketing.
+
+# Data Sources & Setting up SQL
+
+Our primary data source is the past 12 months (Data from July 2021 to June 2022)
+of Cyclistic trip data which was retrieved from: https://divvy-tripdata.s3.amazonaws.com/index.html
+
+
+This data consisted of information such as type of bike used, start and end time,
+customer type, latitude and longitude, and start and end location names. This data
+was initially in the form of 12 individual CSV files corresponding to each month
+of trip data. For convenience, these files were combined into a single SQL database
+table as well as exported into a single CSV file. 
+
+
+Official geographic data on Chicago neighborhoods from the municipal government 
+of Chicago was also used for the geographical visualizations. This was retrieved
+from: https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Neighborhoods/bbvz-uum9
+
+```{r, include=FALSE}
+bikecon <- dbConnect(SQLite(), dbname = "C:/Users/Norpotatos/Documents/Google Data Analytics Capstones/Capstone 1 - Bike Sharing/12_month_ride_data.db")
+initExtension(bikecon)
+dbListTables(bikecon)
+dbListFields(bikecon, "divvy_tripdata_rimport")
+
+result <- dbSendQuery(conn = bikecon,
+                      "SELECT ride_id, started_at, ended_at, member_casual
+                      FROM divvy_tripdata_rimport
+                      ;")
+trip_duration_data <- dbFetch(result)
+
+trip_duration_data$weekday <- wday(trip_duration_data$ended_at, label=TRUE, abbr = FALSE)
+trip_duration_data$trip_duration <- difftime(trip_duration_data$ended_at, trip_duration_data$started_at, units = "mins")
+trip_duration_data$trip_duration <- as.numeric(trip_duration_data$trip_duration)
+```
+
+# Data Cleaning & Manipulation
+
+### Missing Data by Customer
+
+First, the data set only contained missing values for the start and end station
+names, and these missing values were also only seen in entries where an electric
+bike was used.
+
+```{r}
+ggplot(data = Missing_By_Customer) +
+  geom_bar(mapping = aes(x = member_casual, y = num_missing, fill = member_casual),
+           color = "#FFFFFF", position = "dodge", stat = 'identity') +
+  geom_text(aes(x = member_casual, y = num_missing, label = num_missing),
+            vjust = 2, colour = "white", cex = 9) +
+  theme_bw() + labs(title = "Number of Missing Start Locations by Customer",
+                    subtitle = "Data Collected From July 2021 to June 2022  ----  Note: All Missing Data From Electric Bike Users",
+                    x = "Type of Customer", y = "Number of Missing Start Locations",
+                    fill = "Type of Customer") +
+  theme(legend.position = "none") +
+  scale_x_discrete(name = "Type of Customer", labels = c("Casual", "Member")) + 
+  scale_y_continuous(name="Number of Missing Start Locations", labels = scales::comma)
+```
+
+Applying absolute value because the data features negative values for trip duration
+that most likely resulted from flipped start and end times
+
+```{r}
+trip_duration_data$trip_duration <- sapply(trip_duration_data$trip_duration, abs)
+
+ggplot(data = trip_duration_data, mapping = aes(x = trip_duration)) +
+  geom_histogram(binwidth = 1000)
+```
+
+The plot makes it clear that there are major outliers in the data, likely due to
+bikes stolen or not returned for whatever reason
+
+
+To fix this, let's look at the number of entries with extreme trip durations.
+
+```{r}
+print(length(trip_duration_data$trip_duration[trip_duration_data$trip_duration > 10000]))
+print(length(trip_duration_data$trip_duration[trip_duration_data$trip_duration > 100]))
+print(length(trip_duration_data$trip_duration[trip_duration_data$trip_duration == 0]))
+```
+Once we do this we can see that there are a few hundred entries with a duration
+of longer than 10,000 minutes, which seems rather unlikely to be correct. We can
+also see that there only about 70,000 entries that are greater than a 100 minutes,
+and given that our data set has over 5,000,000 entries, this is negligible. With this
+information, it is permissible to trim out these entries for visualizations. 
+
+
+Moving on, there are just a few entries with a trip duration of 0 minutes, which
+we could likely remove from our dataset, although it is unlikely they will skew
+results significantly at all.
+
+### Trimming outliers from data
+
+As stated before, we will trim out entries with a trip duration greater than 100
+minutes because these are infrequent and large enough to be considered outliers.
+
+```{r}
+trip_duration_trim <- trip_duration_data[trip_duration_data$trip_duration < 100, ]
+```
+
+# Analysis & Visualizations
+
+```{r, warning=FALSE}
+casual_trip_duration <- filter(trip_duration_data, member_casual == "casual")
+
+summary(casual_trip_duration$trip_duration)
+sd(casual_trip_duration$trip_duration)
+  
+member_trip_duration <- filter(trip_duration_data, member_casual == "member")
+
+summary(member_trip_duration$trip_duration)
+sd(member_trip_duration$trip_duration)
+```
+Starting our analysis by looking at summary statistics for each customer type,
+we can see that the extreme outliers in trip duration came from casual customers,
+evidenced by the maximum value for members being roughly 1500 minutes, compared
+to the almost 50,000 minute max of casual riders. It can also be seen from both
+the median and the mean that members have shorter trip durations on average.
+Finally, and unsurprisingly, the standard deviation of trip durations for casual
+customers is significantly larger than for members. This is due to the more
+extreme outliers present for casual customers.
+
+## Density of Trip Duration And Differences Between Customers
+
+Next, we will take a look at the distribution of the trip durations by customer.
+
+```{r}
+ggplot(data = trip_duration_trim) +
+  geom_histogram(mapping = aes(x = trip_duration, fill=member_casual),
+                 color = "#FFFFFF", binwidth = 5) + 
+  theme_bw() + labs(title = "Trip Duration By Customer",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Trip Duration (Minutes)", y = "Number of Customers",
+                    fill = "Type of Customer")
+```
+From this first graph we can see that most trips take less than 12.5 minutes for
+all customers, and we see how the number of trips rapidly decreases as trip
+duration increases. We can also notice how the trip durations for
+casual customers are more spread out, and tend to be higher than for members.
+
+
+## Density plot separated by customer
+
+```{r}
+ggplot(data = trip_duration_trim, mapping = aes(x = trip_duration, fill=member_casual)) +
+  geom_density(alpha = 0.5) + theme_bw() + labs(title = "Trip Duration By Customer",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Trip Duration (Minutes)", y = "Density of Customers",
+                    fill = "Type of Customer")
+
+```
+This next graph makes the differences in distribution more obvious, and makes it
+clear to see the tighter spread of the member distribution, and how members tend
+to take shorter trips. It is also worth mentioning that both distributions appear
+to only decrease after reaching their peaks as trip duration increases. This adds
+further support to the general relationships of the number of trips decreasing with
+trip duration.
+
+
+## Comparison of Weekdays
+
+
+We can also compare the number of customers by day of the week, and further break
+it down by customer type.
+
+```{r}
+ggplot(data = trip_duration_trim, mapping = aes(x = weekday, fill = member_casual)) +
+  geom_bar(color = "#FFFFFF", position = 'dodge') +
+  theme_bw() + labs(title = "Number of Customers Per Weekday",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Weekday", y = "Number of Customers",
+                    fill = "Type of Customer")
+```
+Doing this, we see that casual customers greatly prefer to take trips on Saturday
+and Sunday, while members are bit more even though clearly have more preference
+towards weekdays. This hints at casual customers tending to use Cyclistic for
+recreational riding, whereas members seem to use it more for commuting to work.
+Additional evidence of this hypothesis is that members ride on Sunday by far the
+least, and this can be explained by the fact that many places of work are closed
+on Sunday.
+
+
+## Seasonal Look at Customers
+
+```{r, include=FALSE}
+trip_duration_date <- trip_duration_trim
+trip_duration_date$started_at <- as.Date(trip_duration_date$started_at)
+trip_duration_date$ended_at <- as.Date(trip_duration_date$ended_at)
+grouped_trip_data <- trip_duration_date %>%
+  group_by(started_at, member_casual) %>%
+  summarise(count = n())
+```
+
+```{r}
+ggplot(data = grouped_trip_data,
+       mapping = aes(x = started_at, y = count, color = member_casual)) +
+  geom_line(size = 1, alpha = 0.5) +
+  geom_smooth(se = FALSE, size = 3, method = 'loess', formula = 'y ~x') +
+  theme_bw() + labs(title = "Number of Customers Per Day",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Date", y = "Number of Customers",
+                    color = "Type of Customer")
+```
+Moving on to a view of ridership over the entire year, we can see the basic trend
+of ridership being highest during the summer and early fall, while dropping
+substantially during the winter and early spring months. This makes sense as
+Chicago is well-known for its brutal winters, and that makes for a poor cycling
+environment.
+
+
+Looking at the differences between customers, we can see that casual ridership is
+a lot more volatile both on a day-to-day scale, but also over the course of a year.
+This is likely because casual customers tend to use bikes recreationally and
+therefore are less likely to want to ride a bike in snow and terrible weather.
+Members on the other hand are more stable and appear to peak later in September.
+This may be explained by the commuter hypothesis because members need to be at
+work, and therefore are more willing to brave worse weather.
+
+
+## Graphs from initial SQL queries
+
+
+The following graphs have all been generated from basic SQL queries of the whole
+data set, however these queries were performed in a database software and not R.
+
+
+### Average Trip Duration by Customer and Bike
+
+```{r}
+Average_Trip_Duration_By_Customer_And_Bike <- rbind(Average_Trip_Duration_By_Customer_And_Bike, c(0, "docked_bike", "member"))
+Average_Trip_Duration_By_Customer_And_Bike$average_trip_duration <- as.numeric(Average_Trip_Duration_By_Customer_And_Bike$average_trip_duration)
+
+ggplot(data = Average_Trip_Duration_By_Customer_And_Bike) +
+  geom_bar(mapping = aes(x = rideable_type, y = average_trip_duration,
+                         fill = member_casual), color = "#FFFFFF",
+           position = "dodge", stat = 'identity') +
+  theme_bw() + labs(title = "Average Trip Duration by Customer",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Type of Bike", y = "Average Trip Duration (Minutes)",
+                    fill = "Type of Customer") +
+  scale_x_discrete(name = "Type of Bike",
+                   labels = c("Classic Bike", "Docked Bike", "Electric Bike"))
+```
+From this graph, we can see that docked bikes have by far the highest average trip
+duration. This may be a major contributing factor to the greater spread of the
+casual distribution. We can also see that for both casual riders and members,
+classic bikes have longer trip durations on average compared to electric bikes.
+
+
+### Bike Type by Customer
+
+```{r}
+Bike_Type_By_Customer <- Bike_Type_By_Customer %>%
+  rbind(c(0, "member", "docked_bike"))
+Bike_Type_By_Customer$COUNT... <- as.numeric(Bike_Type_By_Customer$COUNT...)
+
+ggplot(data = Bike_Type_By_Customer) +
+  geom_bar(mapping = aes(x = rideable_type, y = COUNT...,
+                         fill = member_casual), color = "#FFFFFF",
+           position = "dodge", stat = 'identity') +
+  theme_bw() + labs(title = "Bike Type Used By Customer",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Type of Bike", y = "Number of Customers",
+                    fill = "Type of Customer") +
+  scale_x_discrete(name = "Type of Bike",
+                   labels = c("Classic Bike", "Docked Bike", "Electric Bike"))
+```
+When we break down bike type by the customer type, we can first see that classic
+bikes are the preferred type by both types of customers. However, members clearly
+prefer classic bikes over electric bikes, while the difference for casual customers
+is less stark. Casual customers are also the only type to use docked bikes, although
+it is by far the least popular option.
+
+
+### Most Popular Stations by Customer
+
+```{r}
+Start_Location_By_Customer <- Start_Location_By_Customer[is.na(Start_Location_By_Customer$start_station_name) == F,]
+Most_Popular_Start <- Most_Popular_Start[-1,]
+Start_Location_By_Customer <- left_join(Start_Location_By_Customer, Most_Popular_Start)
+
+Start_Location_By_Customer %>%
+  filter(start_num >= 26642) %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = reorder(start_station_name, -start_num), y = num,
+                         fill = member_casual), color = "#FFFFFF", stat = 'identity') +
+  theme_bw() + labs(title = "Most Popular Stations by Customer",
+                    subtitle = "Data Collected From July 2021 to June 2022",
+                    x = "Station Name", y = "Number of Customers",
+                    fill = "Type of Customer") +
+  theme(axis.text.x=element_text(angle = -55, hjust = 0))
+```
+Lastly, we can see that Streeter Drive & Grave Avenue is by far the most popular
+station for customers in total, however the breakdown by customer shows that this
+is due to the huge presence of casual customers, while for members it is a less
+important station. Besides this station, none of the others stand out in particular,
+however we do consistently see stations that favor one type of customer over the
+other.
+
+
+# Geographic Analysis
+
+
+To finish off this analysis, we will take a look at the geographic distribution
+of customers, both in total and by customer type.
+
+
+# Geographic Distribution of Total Rides
+
+```{r, include=FALSE}
+result <- dbSendQuery(conn = bikecon,
+                      "SELECT ride_id, member_casual, start_lat, start_lng,
+                      end_lat, end_lng
+                      FROM divvy_tripdata_rimport
+                      ;")
+trip_geographic_data <- dbFetch(result)
+
+Neighborhoods_2012b <- read.csv("Neighborhoods_2012b.csv")
+
+trip_sf <- st_as_sf(trip_geographic_data, coords = c("start_lng", "start_lat"))
+
+counties <- st_as_sf(map("county", plot = FALSE, fill = TRUE))
+counties <- subset(counties, grepl("illinois", counties$ID))
+trip_sf <- st_set_crs(trip_sf, st_crs(counties))
+
+chicago_data <- st_as_sf(Neighborhoods_2012b, wkt = "the_geom")
+chicago_data <- st_set_crs(chicago_data, st_crs(counties))
+
+intersection <- st_intersection(chicago_data, trip_sf)
+customer_totals_member <- intersection %>% 
+  group_by(PRI_NEIGH) %>% 
+  count()
+chicago_data <- st_join(chicago_data, customer_totals_member[, 1:2])
+
+customer_totals_member <- intersection %>% 
+  filter(member_casual == 'member') %>%
+  group_by(PRI_NEIGH) %>% 
+  count()
+chicago_data <- st_join(chicago_data, customer_totals_member[, 1:2])
+  
+customer_totals_member <- intersection %>% 
+  filter(member_casual == 'casual') %>%
+  group_by(PRI_NEIGH) %>% 
+  count()
+chicago_data <- st_join(chicago_data, customer_totals_member[, 1:2])
+
+colnames(chicago_data) <- c("PRI_NEIGH", "SEC_NEIGH", "SHAPE_AREA", "SHAPE_LEN", "drop1",
+                            "n_total", "drop2", "n_member", "drop3", "n_casual", "the_geom")
+chicago_data$n_casual[is.na(chicago_data$n_casual) == TRUE] <- 0
+chicago_data$n_member[is.na(chicago_data$n_member) == TRUE] <- 0
+chicago_data$n_total[is.na(chicago_data$n_total) == TRUE] <- 0
+chicago_data <- subset(chicago_data, select = -c(drop1, drop2, drop3))
+chicago_data$mc_difference <- chicago_data$n_member - chicago_data$n_casual
+```
+
+```{r}
+summary(chicago_data$n_total)
+summary(chicago_data$n_member)
+summary(chicago_data$n_casual)
+summary(chicago_data$mc_difference)
+```
+Looking at the summary statistics for the total count of trips per neighborhood,
+we can see that there is a wide range of values going from zero all the way up to
+almost 475,000. If we look at summary for both customer types we can see that
+members tend to be more centralized. This is indicated by the fact that members
+have a higher mean and maximum than casual customers, however the median is actually
+lower. This means that if we were to take out a few of the largest neighborhoods,
+then we would expect to see members have much lower mean. Essentially, members
+are centralized within larger neighborhoods compared to casual customers. This
+supports the commuter hypothesis because it would make since that member trips
+would be centralized in the larger, more commercial neighborhoods if they were
+commuting to work.
+
+
+To check these numbers, let's create a few maps to see the geographic distribution
+of ridership.
+
+```{r, warning=FALSE}
+ggplot(data = world) +
+  geom_sf(fill = 'lightblue') +
+  geom_sf(data = counties, fill = 'white', color = gray(0.5)) +
+  geom_sf(data = chicago_data, aes(fill = n_total), color = gray(0.5)) +
+  coord_sf(xlim = c(-88, -87.40), ylim = c(41.625, 42.05), expand = FALSE) +
+  labs(title = "Geographic Distribution of Riders",
+       subtitle = "Data Collected From July 2021 to June 2022",
+       fill = "Number of Riders") +
+  scale_fill_gradient(low = 'white', high = '#ff4040', labels = scales::comma) + 
+  theme(legend.key.height = unit(1.5, 'cm'),
+        legend.key.width = unit(0.75, 'cm'))
+
+ggplot(data = world) +
+  geom_sf(fill = 'lightblue') +
+  geom_sf(data = counties, fill = 'white', color = gray(0.5)) +
+  geom_sf(data = chicago_data, aes(fill = n_total), color = gray(0.5)) +
+  coord_sf(xlim = c(-88, -87.40), ylim = c(41.625, 42.05), expand = FALSE) +
+  labs(title = "Geographic Distribution of Riders [Log Scale]",
+       subtitle = "Data Collected From July 2021 to June 2022",
+       fill = "Number of Riders") +
+  scale_fill_gradient(low = 'white', high = '#ff4040', labels = scales::comma, trans = 'log') + 
+  theme(legend.key.height = unit(1.5, 'cm'),
+        legend.key.width = unit(0.75, 'cm'))
+```
+From the first graph we can see that total ridership is centralized in downtown
+Chicago, and that it decreases gradually moving away from this area. If we use
+a logarithmic scale, then we can more clearly see this gradual decrease in
+ridership.
+
+
+# Geographic Distribution by Customer
+
+
+Finally, it would be valuable to see the geographic breakdown of ridership by
+customer type.
+
+```{r}
+ggplot(data = world) +
+  geom_sf(fill = 'lightblue') +
+  geom_sf(data = counties, fill = 'white', color = gray(0.5)) +
+  geom_sf(data = chicago_data, aes(fill = n_member), color = gray(0.5)) +
+  coord_sf(xlim = c(-88, -87.40), ylim = c(41.625, 42.05), expand = FALSE) +
+  labs(title = "Geographic Distribution of Members",
+       subtitle = "Data Collected From July 2021 to June 2022",
+       fill = "Number of Riders") +
+  scale_fill_gradient(low = 'white', high = '#02adad', labels = scales::comma) + 
+  theme(legend.key.height = unit(1.5, 'cm'),
+        legend.key.width = unit(0.75, 'cm'))
+
+ggplot(data = world) +
+  geom_sf(fill = 'lightblue') +
+  geom_sf(data = counties, fill = 'white', color = gray(0.5)) +
+  geom_sf(data = chicago_data, aes(fill = n_casual), color = gray(0.5)) +
+  coord_sf(xlim = c(-88, -87.40), ylim = c(41.625, 42.05), expand = FALSE) +
+  labs(title = "Geographic Distribution of Casual Riders",
+       subtitle = "Data Collected From July 2021 to June 2022",
+       fill = "Number of Riders") +
+  scale_fill_gradient(low = 'white', high = '#ff4040', labels = scales::comma) + 
+  theme(legend.key.height = unit(1.5, 'cm'),
+        legend.key.width = unit(0.75, 'cm'))
+
+ggplot(data = world) +
+  geom_sf(fill = 'lightblue') +
+  geom_sf(data = counties, fill = 'white', color = gray(0.5)) +
+  geom_sf(data = chicago_data, aes(fill = mc_difference), color = gray(0.5)) +
+  coord_sf(xlim = c(-88, -87.40), ylim = c(41.625, 42.05), expand = FALSE) +
+  labs(title = "Geographic Differences Between Members and Casual Riders",
+       subtitle = "Data Collected From July 2021 to June 2022",
+       fill = "Number of Riders") +
+  scale_fill_gradient2(low = '#ff4040', mid = "white", high = '#024ec9',
+                       limits = c(-34000, 130000), 
+                       breaks = c(-34000, -20000, 0, 40000, 80000, 110000, 130000),
+                       labels = c("More Casual", 20000, 0, 40000, 80000, 110000, "More Members")) +
+  theme(legend.key.height = unit(1.5, 'cm'),
+        legend.key.width = unit(0.75, 'cm'))
+```
+From the first two graphs, there appears to be slight differences in where the
+two groups of customers are concentrated, however the same general centralization
+around downtown Chicago is present for both groups. Lastly, if we look at the map
+of the differences between members and casual customers, we can see that members
+have significantly higher numbers in a few location, with a general trend of
+members being the larger group in the downtown area. It is worth noting that there
+are a couple of neighborhoods with more casual customers along the coast in the
+downtown area. This may make sense as coasts tend to be more recreational areas,
+which fits with the hypothesis that casual customers use Cyclistic for recreational
+bike rides.
+
+
+# Recommendations
+##From this analysis, the top three recommendations are as follows:
+
+### 1. Identify how memberships can be beneficial for recreational users
+### 2. Enhance membership value for less frequent riders
+### 3. Increase advertising in areas with a heavier casual presence

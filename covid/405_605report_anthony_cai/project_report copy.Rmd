@@ -1,0 +1,108 @@
+---
+title: "STAT 405/605: R for Data Science Project Report"
+author: "Ben Allen, Anthony Cai, Rohit Jha, Daniel Prasca-Chamorro, Ivan Paredes" 
+date: "April 24, 2022"
+fontsize: 10pt
+geometry: margin=1in
+urlcolor: blue
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE, 
+                      message = FALSE) 
+# library(ggplot2)
+# library(dplyr)
+# library(tidyr)
+# library(tidyquant)
+# library(tidyverse)
+# library(forecast)
+# library(tsibble)
+library(knitr)
+# library(RSQL)
+# library(RSQLite)
+# library(stringr)
+# library(viridis)
+# library(hrbrthemes)
+# library(rgeos)
+# library(geojsonio)
+# library(RColorBrewer)
+# library(broom)
+# library(rgeos)
+# library(gridExtra)
+# library(grid)
+# library(usdata)
+# library(colorspace)
+# library(plotly)
+# library(xts)
+# library(lubridate)
+# library(dygraphs)
+# https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data-with-Ge/n8mc-b4w4
+# load("Untitled.RData")
+```   
+## 1. Introduction
+\setlength{\leftskip}{0.5in}
+### A. Pandemic Outbreak
+| In more than the past two years, coronavirus (CoV) has been the center of attention in our daily life. The surveys behind are increasing popular projects, which develops a statistical system to predict the trend of COVID-19 throughout the world. Monitoring the virus cases are essential both for authorities, administration, and citizens to develop the awareness of how to pandemic envolve, taking necessary measures to protect the public health system as well as stability of societal operation. At the beginning of outbreak after January 20, 2020 when CDC confirmed the first ever COVID-19 case in United States sampled from Washington state, there is a shortage of laboratory tests and available data analysis to represent the progress of a pandemic, but at this point plenty of surveys have been fully conducted and evne our group would be able to make it as a final project of this class. The opening section of this paper along with our project is the collective dense visualization of surveillance data with geographical information across the United States of America. We will present main components of this primary data set that is publicly available in [CDC](https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data-with-Ge/n8mc-b4w4), and RStudio provides the computational development system as we mainly designed to split data by state and use functional programming for statistical computing and graphics. This empowers the portability of our analysis that can swiftly adapt to future works, possible extensions, and tracing method.
+\setlength{\leftskip}{0pt}
+
+## 2. Primary Data Set: Covid-19 Case Surveillance Data
+\setlength{\leftskip}{0.5in}
+### A. Summary of the data set
+| The first and foremost object that lays the solid foundation of our project is the *COVID-19 Case Surveillance Public Use Data with Geography* made by CDC's cleaning algorithm. It includes 15 columns representing elements of demographics, residency, test result, exposure history, disease severity, coupled with underlying conditions in medical risk behaviors. Each row of the data is one diagnosed patient. The geographic information includes District of Columbia and U.S. territories such as Porto Rico. These case reports are shared by health departments and are using standardized formats. They are considered provisional but have quality assurance procedures and data suppression.
+### B. Data Processing & Visualization
+| Based on the raw data provided, we use several procedures to clean the data. Firstly, the omit of "N/A" data entries and split the data frame by different columns of interest using functional programming. New data frames are created for each state using a *for* loop, and the graphs are placed into a list to create massive visualization. *ggplot2* is one of the most prevalent library we use to create plots, and we tried to use the SQL feature in RStudio to manipulate data. The subsets of the original data frame can be gathered as tables in a database, and by using queries we are able to obtain ideal outputs. The commends in SQL can also be pasted as a function with mutable key variables, which can ensure the generalization of database. Another feature we use is the *String*; it deals with the character variables in an numerical way. Lastly, we introduce some advanced works in visualization such as violin chart, stacked area chart, and hexbin choropleth map. Combining plots in grid view to save space and make the result more compact. Simple integrative plots are included at the end using *plotly*, *lubridate*, and *dygraphs*.
+### C. Figures 
+This section will glance some visualization we did based on the primary data set. The histogram of case count of each state is shown in orange bars, with the 3-month and 5-month moving average lines. Cumulative mean is indicated by the blue line showing how the trend changes over time. 
+
+<p>
+```{r, echo=FALSE, fig.align = "center", fig.cap="State case distribution with trend", out.width = '100%'}
+include_graphics("plot.png")
+```
+<p>
+The total case count of each state/territories is spread and sorted with flipped coordinate to better visualize the difference in between.
+<p>
+```{r, echo=FALSE, fig.align = "center", fig.cap="State case distribution", out.width = '50%'}
+include_graphics("state.png")
+```
+<p>
+Pie plots indicate the percentage of the answers towards each reported case. We chose four most remarkable columns to generate the outputs.
+<p>
+```{r, echo=FALSE, fig.align = "center", fig.cap="Pie chart", out.height= '40%'}
+include_graphics("pie.png")
+```
+<p>
+Meanwhile, we use stacked area chart to demonstrate the evolution of a numeric variable for several state, and offers a dedicated reordering with ggplot2 by case count. 
+<p>
+```{r, echo=FALSE, fig.align = "center", fig.cap="Stacked Plot", out.width = '85%'}
+knitr::include_graphics("stackedplot.png")
+```
+<p>
+Box plots are useful to provide a summary of the data to quickly identify critical segments of the distribution, the dispersion of the data set, and signs of skewness. We group the 5 states for each plots since they may have closer case counts and make the plots on correct scales.
+<p>
+```{r, echo=FALSE, fig.align = "center", fig.cap="Boxplot of some top case count states", out.width = '80%'}
+knitr::include_graphics("boxplot.png")
+```
+<p>
+The last figure describes a hexbin map. It is built on a *geojson* file providing boundaries of states as hexagons. *geojason* gallery dedicates a whole section of geospatial object that one can plot using the plot() function. 
+<p>
+```{r, echo=FALSE, fig.align = "center", fig.cap="U.S. choropleth map", out.width = '80%'}
+knitr::include_graphics("usplot.png")
+```
+<p>
+### D. Insights
+| There has already been many interesting works on pandemic visualization, and it has been shown that for many fundamental and agile managements of data sets, RStudio could provide ingenious approaches to generate the ideal outputs. The more advanced work that our group has not done on the COVID-19 cases is to find the causality of these known variables behind the obvious case counts and reported entries. Unlike correlation, causation explore the framework of statistical science to examine the potential outcome, counter factual reasoning, and address potential connection to many other factors from case surveillance.
+\setlength{\leftskip}{0pt}
+
+## 7. Conclusion
+\setlength{\leftskip}{0.5in}
+### A. Pandemic Statistics & Inference
+| Our work on the primary data sets reinforces cleaning, scraping, rearranging, revision, functional programming, and visualization rather then analysis of in-depth concepts. But it is important to establish such a starting point to serve for more diverse resources about the pandemic.
+\setlength{\leftskip}{0pt}
+  
+  
+  
+  
+  
+  
