@@ -50,16 +50,27 @@
 		h3 {
 			font-size: 1.5vw;
 		}
+		.sticky-header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			background-color: #fff; /* Change the background color as needed */
+			z-index: 1000; /* Adjust the z-index to ensure the header appears above other content */
+			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for the header */
+			transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
+		}
     </style>
   </head>
   <body>
-    <header>
+    <header class="sticky-header">
 		<div class="container">
 			<figure>
 				<img src="GettyImages-1238751899.jpg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100%;">
 			</figure>
-			<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;">Trade Wars: <br> The Russo-Ukrainian War through the Lens of Trade</h1></div>
+			<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;"> Ben Allen</h1></div>
 		</div>
+    <script src="sticky_header.js"></script>
       	
     </header>
     <main>
@@ -70,12 +81,12 @@
 			<img src="np_file_143288.jpeg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 30%; float: left; padding-right: 25px;">
 		</figure>
 		<ul>
-			<li><a href="https://benwillallen.github.io/ukraine/"></a></li>
-			<li><a href="https://benwillallen.github.io/inflation_forecasting/"></a></li>
-			<li><a href="https://benwillallen.github.io/bike_share/"></a></li>
-			<li><a href="https://benwillallen.github.io/chicago/"></a></li>
-			<li><a href="https://benwillallen.github.io/grc_tableau/"></a></li>
-			<li><a href="https://benwillallen.github.io/covid/"></a></li>
+			<li><a href="https://benwillallen.github.io/ukraine/">Trade Wars: The Ukrainian War Through the Lens of International Trade</a></li>
+			<li><a href="https://benwillallen.github.io/inflation_forecasting/">Forecasting US Inflation</a></li>
+			<li><a href="https://benwillallen.github.io/bike_share/">Cyclistic Bike-Share Customer Analysis</a></li>
+			<li><a href="https://benwillallen.github.io/chicago/">Chicago Project</a></li>
+			<li><a href="https://benwillallen.github.io/grc_tableau/">Global Research and Consulting Tableau</a></li>
+			<li><a href="https://benwillallen.github.io/covid/">COVID-19 and Twitter Sentiment Data</a></li>
 		</ul>
 		<h3>Data Sources</h3>
 		<ul>
