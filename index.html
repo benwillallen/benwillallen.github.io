@@ -1,104 +1,137 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Trade Wars: The Russo-Ukrainian War Through The Lens of International Trade</title>
-    <style>
-      /* Add any custom CSS styles here */
-		body {
-			background-color: #141414; /* set background color to dark gray */
-        	color: #fff0d5; /* set text color to off-white */
-        	font-family: Bahnschrift, sans-serif;
-			margin: 50px;
-      	}
-		img {
-    		width: 100%;
-  		}
-		p {
-			font-size: 1.5vw;
-		}
-		li {
-			font-size: 1.5vw;
-		}
-		iframe {
-			border-style: solid;
-			border-color: #141414;
-			border-width: medium;
-		}
-		.container {
-  			position: relative;
-  			text-align: center;
-  			color: white;
-		}
-		.centered {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-		}
-		.center {
-		  	display: block;
-		  	margin-left: auto;
-		  	margin-right: auto;
-		  	width: 85%;
-		}
-		h1 {
-			font-size: 3.2vw;
-		}
-		h2 {
-			font-size: 2.2vw;
-		}
-		h3 {
-			font-size: 1.5vw;
-		}
-		.sticky-header {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			background-color: #fff; /* Change the background color as needed */
-			z-index: 1000; /* Adjust the z-index to ensure the header appears above other content */
-			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for the header */
-			transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
-		}
-    </style>
-  </head>
-  <body>
-    <header class="sticky-header">
-		<div class="container">
+	<head>
+		<title>Trade Wars: The Russo-Ukrainian War Through The Lens of International Trade</title>
+		<style>
+		  /* Add any custom CSS styles here */
+			body {
+				background-color: #141414; /* set background color to dark gray */
+				color: #fff0d5; /* set text color to off-white */
+				font-family: Bahnschrift, sans-serif;
+				margin: 50px;
+			}
+			img {
+				width: 100%;
+			}
+			p {
+				font-size: 1.5vw;
+			}
+			li {
+				font-size: 1.5vw;
+			}
+			iframe {
+				border-style: solid;
+				border-color: #141414;
+				border-width: medium;
+			}
+			.container {
+				position: relative;
+				text-align: center;
+				color: white;
+			}
+			.centered {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+			.center {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				width: 85%;
+			}
+			h1 {
+				font-size: 4vw;
+			}
+			h2 {
+				font-size: 2.2vw;
+			}
+			h3 {
+				font-size: 1.5vw;
+			}
+			.sticky-header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				background-color: #1c1c1c; /* Change the background color as needed */
+				z-index: 1000; /* Adjust the z-index to ensure the header appears above other content */
+				box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for the header */
+				transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
+			}
+			.centered-buttons {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100%; /* Ensure the buttons are centered vertically */
+				font-size: 1.5vw;
+			}
+
+			.header-button {
+				display: inline-block;
+				padding: 20px 30px;
+				margin: 10px;
+				background-color: #293b37; /* Change the button background color as needed */
+				color: #fff0d5; /* Change the button text color as needed */
+				text-decoration: none;
+				border-radius: 5px;
+				transition: background-color 0.3s ease-in-out;
+			}
+
+			.header-button:hover {
+				background-color: #59a896; /* Change the hover background color as needed */
+			}
+			.content {
+				padding-top: 100px; /* Adjust this value based on your header's height */
+			}
+		</style>
+	</head>
+	<body>
+		<header class="sticky-header">
+			<div class="centered-buttons">
+				<a href="https://benwillallen.github.io/ukraine/" target="_blank" class="header-button">Home</a>
+				<a href="https://benwillallen.github.io/inflation_forecasting/" target="_blank" class="header-button">About Me</a>
+				<a href="https://benwillallen.github.io/bike_share/" target="_blank" class="header-button">Project Portfolio</a>
+				<a href="https://benwillallen.github.io/chicago/" target="_blank" class="header-button">Education and Work Experience</a>
+        	</div>
+		</header>
+		<header>
+			<div class="container">
+				<figure>
+					<img src="_DSC4968.jpg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100%;">
+				</figure>
+				<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;"> Ben Allen</h1></div>
+			</div>
+		<script src="sticky_header.js"></script>
+
+		</header>
+		<main class="content">
+		  <!-- Add your visualizations and content here -->
+			<ul>
+				<li><a href="https://benwillallen.github.io/ukraine/">Trade Wars: The Ukrainian War Through the Lens of International Trade</a></li>
+				<li><a href="https://benwillallen.github.io/inflation_forecasting/">Forecasting US Inflation</a></li>
+				<li><a href="https://benwillallen.github.io/bike_share/">Cyclistic Bike-Share Customer Analysis</a></li>
+				<li><a href="https://benwillallen.github.io/chicago/">Chicago Project</a></li>
+				<li><a href="https://benwillallen.github.io/grc_tableau/">Global Research and Consulting Tableau</a></li>
+				<li><a href="https://benwillallen.github.io/covid/">COVID-19 and Twitter Sentiment Data</a></li>
+			</ul>
+			<h2>Introduction</h2>
+			<p></p>
 			<figure>
-				<img src="GettyImages-1238751899.jpg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100%;">
+				<img src="np_file_143288.jpeg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 30%; float: left; padding-right: 25px;">
 			</figure>
-			<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;"> Ben Allen</h1></div>
-		</div>
-    <script src="sticky_header.js"></script>
-      	
-    </header>
-    <main>
-      <!-- Add your visualizations and content here -->
-		<h2>Introduction</h2>
-		<p></p>
-		<figure>
-			<img src="np_file_143288.jpeg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 30%; float: left; padding-right: 25px;">
-		</figure>
-		<ul>
-			<li><a href="https://benwillallen.github.io/ukraine/">Trade Wars: The Ukrainian War Through the Lens of International Trade</a></li>
-			<li><a href="https://benwillallen.github.io/inflation_forecasting/">Forecasting US Inflation</a></li>
-			<li><a href="https://benwillallen.github.io/bike_share/">Cyclistic Bike-Share Customer Analysis</a></li>
-			<li><a href="https://benwillallen.github.io/chicago/">Chicago Project</a></li>
-			<li><a href="https://benwillallen.github.io/grc_tableau/">Global Research and Consulting Tableau</a></li>
-			<li><a href="https://benwillallen.github.io/covid/">COVID-19 and Twitter Sentiment Data</a></li>
-		</ul>
-		<h3>Data Sources</h3>
-		<ul>
-			<li>Inflation Rate, Percent of GDP from Agriculture, Life Expectancy Data from Gapminder, Retrieved From: <a href="https://www.gapminder.org/">https://www.gapminder.org/</a></li>
-			<li>Annual GDP, GDP per Capita, and Population Data from World Bank Open Data, Retrieved From: <a href="https://data.worldbank.org/?name_desc=true">https://data.worldbank.org/?name_desc=true</a></li>
-			<li>Import and Export Data - United Nations Comtrade Data Set, Retrieved From: <a href="https://comtradeplus.un.org/">https://comtradeplus.un.org/</a></li>
-  			<li>Ukrainian Foreign Aid Data - Christoph Trebesch, Arianna Antezza, Katelyn Bushnell, Andre Frank, Pascal Frank, Lukas Franz, Ivan Kharitonov, Bharath Kumar, Ekaterina Rebinskaya, and Stefan Schramm (2023). "The Ukraine Support Tracker: Which countries help Ukraine and how?" Kiel Working Paper, No. 2218, 1-75.</li>
-  			<li>Russian "Unfriendly Countries" List - Retrieved From: <a href="https://tass.com/russia/1484099">https://tass.com/russia/1484099</a></li>
-		</ul>
-    </main>
-    <footer>
-      <p>&copy; 2023 Benjamin Allen</p>
-    </footer>
-  </body>
+			<h3>Data Sources</h3>
+			<ul>
+				<li>Inflation Rate, Percent of GDP from Agriculture, Life Expectancy Data from Gapminder, Retrieved From: <a href="https://www.gapminder.org/">https://www.gapminder.org/</a></li>
+				<li>Annual GDP, GDP per Capita, and Population Data from World Bank Open Data, Retrieved From: <a href="https://data.worldbank.org/?name_desc=true">https://data.worldbank.org/?name_desc=true</a></li>
+				<li>Import and Export Data - United Nations Comtrade Data Set, Retrieved From: <a href="https://comtradeplus.un.org/">https://comtradeplus.un.org/</a></li>
+				<li>Ukrainian Foreign Aid Data - Christoph Trebesch, Arianna Antezza, Katelyn Bushnell, Andre Frank, Pascal Frank, Lukas Franz, Ivan Kharitonov, Bharath Kumar, Ekaterina Rebinskaya, and Stefan Schramm (2023). "The Ukraine Support Tracker: Which countries help Ukraine and how?" Kiel Working Paper, No. 2218, 1-75.</li>
+				<li>Russian "Unfriendly Countries" List - Retrieved From: <a href="https://tass.com/russia/1484099">https://tass.com/russia/1484099</a></li>
+			</ul>
+		</main>
+		<footer>
+		  <p>&copy; 2023 Benjamin Allen</p>
+		</footer>
+	</body>
 </html>
