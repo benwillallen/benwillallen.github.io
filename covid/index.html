@@ -5,15 +5,34 @@
     <link rel="stylesheet" href="../style_sheet.css">
   </head>
   <body>
-    <header>
-		<div class="container">
-			<figure>
-				<img src="GettyImages-1238751899.jpg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100%;">
-			</figure>
-			<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;">Trade Wars: <br> COVID-19 and Twitter Data</h1></div>
-		</div>
-      	
-    </header>
+	  <header class="sticky-header">
+			<div class="centered-buttons">
+				<a href="https://benwillallen.github.io/" target="_blank" class="header-button">Home</a>
+				<a href="https://benwillallen.github.io/#about_me" target="_blank" class="header-button">About Me</a>
+				<a href="https://benwillallen.github.io/project/" target="_blank" class="header-button">Project Portfolio</a>
+				<a href="https://benwillallen.github.io/resume/" target="_blank" class="header-button">Resume</a>
+        	</div>
+		</header>
+		<script src="sticky_header.js"></script>
+		<script>
+			// JavaScript to handle smooth scrolling for internal links
+			document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+				anchor.addEventListener('click', function(e) {
+					e.preventDefault();
+					document.querySelector(this.getAttribute('href')).scrollIntoView({
+						behavior: 'smooth'
+					});
+				});
+			});
+		</script>
+    	<header>
+			<div class="container">
+				<figure>
+					<img src="GettyImages-1238751899.jpg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100%;">
+				</figure>
+				<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;">Trade Wars: <br> COVID-19 and Twitter Data</h1></div>
+			</div>
+    	</header>
     <main>
       <!-- Add your visualizations and content here -->
 		<h2>Introduction</h2>

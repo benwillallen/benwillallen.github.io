@@ -1,36 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Cyclistic Bike-Share Customer Analysis</title>
-	<link rel="stylesheet" href="../style_sheet.css">
-  </head>
-  <body>
-    <header>
+	<head>
+		<title>Cyclistic Bike-Share Customer Analysis</title>
+		<link rel="stylesheet" href="../style_sheet.css">
+	</head>
+  	<body>
+		<header class="sticky-header">
+			<div class="centered-buttons">
+				<a href="https://benwillallen.github.io/" target="_blank" class="header-button">Home</a>
+				<a href="https://benwillallen.github.io/#about_me" target="_blank" class="header-button">About Me</a>
+				<a href="https://benwillallen.github.io/project/" target="_blank" class="header-button">Project Portfolio</a>
+				<a href="https://benwillallen.github.io/resume/" target="_blank" class="header-button">Resume</a>
+        	</div>
+		</header>
+		<script src="sticky_header.js"></script>
+		<script>
+			// JavaScript to handle smooth scrolling for internal links
+			document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+				anchor.addEventListener('click', function(e) {
+					e.preventDefault();
+					document.querySelector(this.getAttribute('href')).scrollIntoView({
+						behavior: 'smooth'
+					});
+				});
+			});
+		</script>
+    	<header>
 		<div class="container">
 			<figure>
 				<img src="GettyImages-1238751899.jpg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100%;">
 			</figure>
 			<div class="centered"><h1 style="background-color: rgb(20, 20, 20, 0.75); padding: 20px; color: #fff0d5;">Trade Wars: <br> Cyclistic Bike-Share Customer Analysis</h1></div>
 		</div>
-      	
-    </header>
-    <main>
-		<h2>Introduction</h2>
-		<p><a href="https://benwillallen.github.io/inflation_forecasting"></a></p>
-		<figure>
-			<img src="np_file_143288.jpeg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 30%; float: left; padding-right: 25px;">
-		</figure>
-		<h3>Data Sources</h3>
-		<ul>
-			<li>Inflation Rate, Percent of GDP from Agriculture, Life Expectancy Data from Gapminder, Retrieved From: <a href="https://www.gapminder.org/">https://www.gapminder.org/</a></li>
-			<li>Annual GDP, GDP per Capita, and Population Data from World Bank Open Data, Retrieved From: <a href="https://data.worldbank.org/?name_desc=true">https://data.worldbank.org/?name_desc=true</a></li>
-			<li>Import and Export Data - United Nations Comtrade Data Set, Retrieved From: <a href="https://comtradeplus.un.org/">https://comtradeplus.un.org/</a></li>
-  			<li>Ukrainian Foreign Aid Data - Christoph Trebesch, Arianna Antezza, Katelyn Bushnell, Andre Frank, Pascal Frank, Lukas Franz, Ivan Kharitonov, Bharath Kumar, Ekaterina Rebinskaya, and Stefan Schramm (2023). "The Ukraine Support Tracker: Which countries help Ukraine and how?" Kiel Working Paper, No. 2218, 1-75.</li>
-  			<li>Russian "Unfriendly Countries" List - Retrieved From: <a href="https://tass.com/russia/1484099">https://tass.com/russia/1484099</a></li>
-		</ul>
-    </main>
-    <footer>
-      <p>&copy; 2023 Benjamin Allen</p>
-    </footer>
-  </body>
+    	</header>
+    	<main>
+			<h2>Introduction</h2>
+			<p><a href="https://benwillallen.github.io/inflation_forecasting"></a></p>
+			<figure>
+				<img src="np_file_143288.jpeg" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 30%; float: left; padding-right: 25px;">
+			</figure>
+			<h3>Data Sources</h3>
+			<ul>
+				<li>Inflation Rate, Percent of GDP from Agriculture, Life Expectancy Data from Gapminder, Retrieved From: <a href="https://www.gapminder.org/">https://www.gapminder.org/</a></li>
+				<li>Annual GDP, GDP per Capita, and Population Data from World Bank Open Data, Retrieved From: <a href="https://data.worldbank.org/?name_desc=true">https://data.worldbank.org/?name_desc=true</a></li>
+				<li>Import and Export Data - United Nations Comtrade Data Set, Retrieved From: <a href="https://comtradeplus.un.org/">https://comtradeplus.un.org/</a></li>
+				<li>Ukrainian Foreign Aid Data - Christoph Trebesch, Arianna Antezza, Katelyn Bushnell, Andre Frank, Pascal Frank, Lukas Franz, Ivan Kharitonov, Bharath Kumar, Ekaterina Rebinskaya, and Stefan Schramm (2023). "The Ukraine Support Tracker: Which countries help Ukraine and how?" Kiel Working Paper, No. 2218, 1-75.</li>
+				<li>Russian "Unfriendly Countries" List - Retrieved From: <a href="https://tass.com/russia/1484099">https://tass.com/russia/1484099</a></li>
+			</ul>
+		</main>
+		<footer>
+		  <p>&copy; 2023 Benjamin Allen</p>
+		</footer>
+  	</body>
 </html>
