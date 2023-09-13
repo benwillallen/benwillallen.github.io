@@ -1,0 +1,121 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	background-color: #141414; /* set background color to dark gray */
+	color: #fff0d5; /* set text color to off-white */
+	font-family: Bahnschrift, sans-serif;
+	margin: 50px;
+}
+img {
+	width: 100%;
+}
+p {
+	font-size: 1.5vw;
+}
+li {
+	font-size: 1.5vw;
+}
+iframe {
+	border-style: solid;
+	border-color: #141414;
+	border-width: medium;
+}
+.container {
+	position: relative;
+	text-align: center;
+	color: white;
+}
+.centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -75%);
+}
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 85%;
+	text-align: center;
+}
+h1 {
+	font-size: 6vw;
+}
+h2 {
+	font-size: 2.2vw;
+}
+h3 {
+	font-size: 1.5vw;
+}
+.sticky-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #1c1c1c; /* Change the background color as needed */
+	z-index: 1000; /* Adjust the z-index to ensure the header appears above other content */
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for the header */
+	transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
+}
+.centered-buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%; /* Ensure the buttons are centered vertically */
+	font-size: 1.75vw;
+}
+.header-button {
+	display: inline-block;
+	padding: 15px 25px;
+	margin: 10px;
+	background-color: #293b37; /* Change the button background color as needed */
+	color: #fff0d5; /* Change the button text color as needed */
+	text-decoration: none;
+	border-radius: 5px;
+	transition: background-color 0.3s ease-in-out;
+}
+.header-button:hover {
+	background-color: #59a896;
+}
+.content {
+	padding-top: 10px;
+}
+/* CSS for the grid */
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr); /* Create 3 columns */
+	gap: 20px; /* Adjust the gap between grid items */
+}
+.grid-item {
+	text-align: center;
+	font-size: 1.5vw;
+	background-color: #293b37; /* Background color of each grid item */
+	padding: 10px;
+	border: 3px solid #383838; /* Border around each grid item */
+	border-radius: 10px;
+	transition: background-color 0.3s ease-in-out;
+	height: 24vw;
+}
+.grid-item:hover {
+	background-color: #59a896; /* Background color of each grid item */
+}
+.grid-item img {
+	width: 100%; /* Make the image width 100% of its container */
+	height: auto; /* Maintain aspect ratio */
+	border-radius: 10px;
+}
+.grid-link {
+	text-decoration: none;
+	color: #fff0d5;
+}
+.grid-link:visited {
+	text-decoration: none;
+	color: #fff0d5;
+}
+.box-label {
+	margin-top: 10px; /* Adjust the spacing between image and label */
+	font-weight: bold;
+}
+#mainimg {
+	margin: -100px;
+}
