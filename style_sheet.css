@@ -149,3 +149,34 @@ h3 {
 .hidden {
 	display: none;
 }
+.project {
+	list-style-type: none;
+}
+.project li {
+ 	display: flex; /* Use flexbox for layout */
+	align-items: center; /* Vertically center-align items */
+	margin-bottom: 20px; /* Adjust as needed for spacing */
+ }
+.project img {
+	width: 30vw;
+	border-radius: 7px;
+	border: 5px solid #383838;
+}
+.project-link {
+	text-decoration: none;
+	color: #fff0d5;
+	float: left;
+	margin-right: 2vw;
+	background-color: #293b37; /* Background color of each grid item */
+	padding: 15px;
+	border: 5px solid #383838; /* Border around each grid item */
+	border-radius: 10px;
+	transition: background-color 0.3s ease-in-out;
+}
+.project-link:visited {
+	text-decoration: none;
+	color: #fff0d5;
+}
+.project-link:hover {
+	background-color: #59a896;
+}
