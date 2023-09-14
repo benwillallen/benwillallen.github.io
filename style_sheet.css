@@ -116,6 +116,36 @@ h3 {
 	margin-top: 10px; /* Adjust the spacing between image and label */
 	font-weight: bold;
 }
-#mainimg {
-	margin: -100px;
+.bottom-center-image {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+	transition: width 0.3s ease-in-out;
+}
+.bottom-center-image:hover {
+    width: 70%;
+}
+.skill {
+	display: flex; /* Use flexbox for horizontal alignment */
+	flex-wrap: wrap;
+    justify-content: space-between; /* Space evenly between images */
+	gap: 20px;
+    align-items: center; /* Center vertically */
+    padding: 20px; /* Optional padding for spacing */
+	padding-bottom: 10px;
+	border-radius: 10px;
+	background-color: rgba(88,88,88,0.50);
+	text-align: center;
+	position: relative;
+}
+.skill img {
+	width: 7vw; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin: 0 5px; /* Adjust margin for spacing between images */
+	padding-bottom: 10px;
+}
+.hidden {
+	display: none;
 }

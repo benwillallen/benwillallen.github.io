@@ -3,6 +3,26 @@
 	<head>
 		<title>Ben Allen Portfolio Homepage</title>
 		<link rel="stylesheet" href="style_sheet.css">
+		<style>
+			#copyButton {
+				cursor: pointer;
+			}
+			#emailBanner {
+				display: none;
+				background-color: rgb(20, 20, 20, 0.75);
+				padding: 2px;
+				border: 3px solid #212121;
+				border-radius: 10px;
+				text-align: center;
+				width: 25%;
+			}
+			#emailText {
+				font-weight: bold;
+			}
+			#mainimg {
+				margin: -100px;
+			}
+		</style>
 	</head>
 	<body>
 		<header class="sticky-header">
@@ -14,6 +34,24 @@
         	</div>
 		</header>
 		<script src="sticky_header.js"></script>
+		
+		<div class="container">
+			<figure>
+				<img src="DSC4968.png" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100vw;" id="mainimg">
+			</figure>
+			<div class="centered">
+				<h1 style="color: #fff0d5; text-shadow: 2px 2px #bdad8f; background-color: rgb(20, 20, 20, 0.75); padding: 20px; border-radius: 10px; margin-bottom: 10px;">Ben Allen<br><span style="font-size: 3vw;">Statistics and Data Science</span></h1>
+				<!--LinkedIn and GitHub Image Links-->
+				<div style="bottom: 20%;">
+					<a href="https://www.linkedin.com/in/benjaminallen24/" target="_blank"><img src="LI-In-Bug.png" alt="LinkedIn Logo" style="width: 10%; padding-right: 15px; background-color: rgb(20, 20, 20, 0.75); padding: 10px; border-radius: 10px;"></a>
+					<a href="https://github.com/benwillallen" target="_blank"><img src="github-mark-white.png" alt="GitHub Logo" style="width: 10%; padding-left: 15px; background-color: rgb(20, 20, 20, 0.75); padding: 10px; border-radius: 10px;"></a>
+					<a href="mailto:bnwillall.24@gmail.com"><img src="Mail Icon.png" alt="Mail Icon" id="copyButton" style="width: 10%; padding-left: 15px; background-color: rgb(20, 20, 20, 0.75); padding: 10px; border-radius: 10px;"></a>
+				</div>
+			</div>
+			<div class="bottom-center-image">
+        		<a href="#about_me"><img src="Down Indicator Symbol.png" alt="Down Arrow" style="width: 10%;"></a>
+    		</div>
+		</div>
 		<script>
 			// JavaScript to handle smooth scrolling for internal links
 			document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -25,23 +63,50 @@
 				});
 			});
 		</script>
-		<div class="container">
-			<figure>
-				<img src="DSC4968.png" alt="A graph showing various aspects of the economies of Ukraine and Russia and comparing them" style="width: 100vw;" id="mainimg">
-			</figure>
-			<div class="centered">
-				<h1 style="color: #fff0d5; text-shadow: 2px 2px #bdad8f; background-color: rgb(20, 20, 20, 0.75); padding: 20px; border-radius: 10px;">Ben Allen</h1>
-			</div>
-			<!--LinkedIn and GitHub Image Links-->
-			<a href="https://www.linkedin.com/in/benjaminallen24/" target="_blank"><img src="LI-In-Bug.png" alt="LinkedIn Logo" style="width: 5%; padding-right: 15px; transform: translate(140%, -320%); background-color: rgb(20, 20, 20, 0.75); padding: 10px; border-radius: 10px;"></a>
-			<a href="https://github.com/benwillallen" target="_blank"><img src="github-mark-white.png" alt="GitHub Logo" style="width: 5.01%; padding-left: 15px; transform: translate(140%, -326%); background-color: rgb(20, 20, 20, 0.75); padding: 10px; border-radius: 10px;"></a>
-		</div>
 		<section id="about_me">
 		<p style="color: #141414">Ignore</p>
 		<main class="content">
-			<h2>About Me</h2>
-			<p>Hello! My name is Ben Allen, and I am a Junior at Rice University studying statistics and data science.</p>
-			<h2>Skills</h2>
+			<h2 class="center" style="font-size: 4vw;">About Me</h2>
+			<p style="font-size: 2vw;">Hello! I'm Benjamin Allen, a driven and detail-oriented student at Rice University in Houston, TX, pursuing a Bachelor of Science in Statistics, with minors in Data Science and Financial Modeling. <br><br> During my time at Rice I have committed myself to my academics, extracurriculars, and employment to develop a diverse array of soft and technical skills. This skill set empowers me to deliver data-driven solutions that bridge the gap between developer and stakeholder. <br><br> I am particularly interested in bayesian statistics, time series and geospatial analysis, and data visualization. I aim to leverage these skills to tackle challenging problems and drive innovation in the world of data science.</p>
+			<h2 class="center">Skills</h2>
+			<div class="skill">
+				<div>
+					<img src="Python-logo-notext.png" alt="Python Logo">
+					<p>Python</p>
+				</div>
+				<div>
+					<img src="Pandas_logo.png" alt="Pandas Logo">
+					<p>Pandas</p>
+				</div>
+				<div>
+					<img src="2560px-Scikit_learn_logo_small.png" alt="Scikit Logo">
+					<p>Scikit-Learn</p>
+				</div>
+				<div>
+					<img src="R_logo.png" alt="R Logo">
+					<p>R Language</p>
+				</div>
+				<div>
+					<img src="tidyverse_logo_icon_249394.png" alt="Tidyverse Logo">
+					<p>Tidyverse</p>
+				</div>
+				<div>
+					<img src="postgresql-logo.png" alt="PostgreSQL Logo">
+					<p>PostgreSQL</p>
+				</div>
+				<div>
+					<img src="Java_programming_language_logo.png" alt="Java Logo">
+					<p>Java</p>
+				</div>
+				<div>
+					<img src="HTML5_Logo_512.png" alt="HTML Logo">
+					<p>HTML</p>
+				</div>
+				<div>
+					<img src="CSS3_logo_and_wordmark.png" alt="CSS Logo">
+					<p>CSS</p>
+				</div>
+    		</div>
 			<h2 class="center">Check Out My Projects!</h2>
 			<div class="grid-container">
 				<a href="https://benwillallen.github.io/ukraine/" class="grid-link">
