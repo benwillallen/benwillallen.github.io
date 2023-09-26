@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Receipt Matching</title>
+	<link rel="stylesheet" href="../style_sheet.css">
+</head>
+
+<body>
+	<header class="sticky-header">
+		<div class="centered-buttons">
+			<a href="https://benwillallen.github.io/" target="_self" class="header-button">Home</a>
+			<a href="https://benwillallen.github.io/#about_me" target="_self" class="header-button">About Me</a>
+			<a href="https://benwillallen.github.io/projects/" target="_self" class="header-button">Project Portfolio</a>
+			<a href="https://benwillallen.github.io/resume/" target="_self" class="header-button">Resume</a>
+		</div>
+	</header>
+	<script src="sticky_header.js"></script>
+	<script>
+		// JavaScript to handle smooth scrolling for internal links
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function(e) {
+				e.preventDefault();
+				document.querySelector(this.getAttribute('href')).scrollIntoView({
+					behavior: 'smooth'
+				});
+			});
+		});
+	</script>
+	<main class="content">
+		<h1 style="z-index: 4; transform: translate(0%, -10%); margin-bottom: -10px;" class="center">Receipt Matching Through Image Recognition</h1>
+		<p>This project matches receipt images with user-provided data by first cleaning the user data using a "clean_data" script to address imperfections. We then utilized computer vision to isolate and convert text from receipt images into OCR data. This, along with the cleaned user data, is transformed into machine-readable format. We employ Levenshtein distances to measure text differences between OCR and user data, focusing on address and vendor name to identify potential user IDs. Further refinement involves filtering by date and total price. Finally, we use machine learning with gradient descent to optimize weights for Levenshtein distances (price, date, and address), achieving an 89.5% accuracy rate on the test set.</p>
+		<h2>Check out the following video to learn more!</h2>
+		<figure style="position: relative">
+			<iframe style="display: block; margin-left: auto; margin-right: auto; width: 80%; height: 40vw;" src="https://www.youtube.com/embed/nCE2SmE1MMM?si=_jioSsylm9M3jdaE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+		</figure>
+		<h2 class="center"><a href="https://devpost.com/software/verifying-receipt-transactions" target="_blank" class="header-button">Click Here For Devpost and Github</a></h2>
+	</main>
+	<footer>
+		<p>&copy; 2023 Benjamin Allen</p>
+	</footer>
+</body>
+</html>
